@@ -43,7 +43,7 @@ function drawGrid(svg) {
 function addBlock(svg) {
   const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
   rect.setAttribute("x", 100);
-  rect.setAttribute("y", 200);
+  rect.setAttribute("y", 20);
   rect.setAttribute("width", 60);
   rect.setAttribute("height", 100);
   rect.setAttribute("fill", "#fff");
@@ -54,13 +54,37 @@ function addBlock(svg) {
     "http://www.w3.org/2000/svg",
     "rect"
   );
-  terminal1.setAttribute("x", Number(rect.getAttribute("x")) + 50);
-  terminal1.setAttribute("y", Number(rect.getAttribute("y")) + 20);
+  terminal1.setAttribute("x", Number(rect.getAttribute("x")) + -10);
+  terminal1.setAttribute("y", Number(rect.getAttribute("y")) + 10);
   terminal1.setAttribute("width", 20);
   terminal1.setAttribute("height", 20);
   terminal1.setAttribute("fill", "#fff");
   terminal1.setAttribute("stroke", "#000");
   svg.appendChild(terminal1);
+
+  const terminal2 = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "rect"
+  );
+  terminal2.setAttribute("x", Number(rect.getAttribute("x")) + -10);
+  terminal2.setAttribute("y", Number(rect.getAttribute("y")) + 70);
+  terminal2.setAttribute("width", 20);
+  terminal2.setAttribute("height", 20);
+  terminal2.setAttribute("fill", "#fff");
+  terminal2.setAttribute("stroke", "#000");
+  svg.appendChild(terminal2);
+
+  const terminal3 = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "rect"
+  );
+  terminal3.setAttribute("x", Number(rect.getAttribute("x")) + 50);
+  terminal3.setAttribute("y", Number(rect.getAttribute("y")) + 40);
+  terminal3.setAttribute("width", 20);
+  terminal3.setAttribute("height", 20);
+  terminal3.setAttribute("fill", "#fff");
+  terminal3.setAttribute("stroke", "#000");
+  svg.appendChild(terminal3);
 }
 
 function main() {
