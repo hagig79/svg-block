@@ -11,10 +11,10 @@ SvgView.prototype.initialize = function () {
 SvgView.prototype.addBlock = function (block) {
   const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
   rect.setAttribute("rx", "5");
-  rect.setAttribute("x", 100);
-  rect.setAttribute("y", 20);
-  rect.setAttribute("width", 60);
-  rect.setAttribute("height", 100);
+  rect.setAttribute("x", 98);
+  rect.setAttribute("y", 28);
+  rect.setAttribute("width", 70);
+  rect.setAttribute("height", 112);
   rect.setAttribute("fill", "#fff");
   rect.setAttribute("stroke", "#000");
   rect.addEventListener("click", () => {
@@ -33,15 +33,33 @@ SvgView.prototype.addBlock = function (block) {
     offsetX = event.offsetX - Number(rect.getAttribute("x"));
     offsetY = event.offsetY - Number(rect.getAttribute("y"));
   });
+  rect.addEventListener("touchstart", (event) => {
+    event.preventDefault();
+    drag = true;
+    offsetX = event.touches[0].clientX - Number(rect.getAttribute("x"));
+    offsetY = event.touches[0].clientY - Number(rect.getAttribute("y"));
+  });
   rect.addEventListener("mousemove", (event) => {
     if (!drag) {
       return;
     }
-    rect.setAttribute("x", event.clientX - offsetX);
-    rect.setAttribute("y", event.clientY - offsetY);
+    rect.setAttribute("x", event.touches.clientX - offsetX);
+    rect.setAttribute("y", event.touches.clientY - offsetY);
+  });
+  rect.addEventListener("touchmove", (event) => {
+    event.preventDefault();
+    if (!drag) {
+      return;
+    }
+    rect.setAttribute("x", event.touches[0].clientX - offsetX);
+    rect.setAttribute("y", event.touches[0].clientY - offsetY);
   });
   rect.addEventListener("mouseup", () => {
     drag = false;
+  });
+  rect.addEventListener("touchend", (event) => {
+    drag = false;
+    event.preventDefault();
   });
   // rect.addEventListener("mouseout", () => {
   //   drag = false;
@@ -53,8 +71,8 @@ SvgView.prototype.addBlock = function (block) {
     "circle"
   );
   terminal1.setAttribute("cx", Number(rect.getAttribute("x")));
-  terminal1.setAttribute("cy", Number(rect.getAttribute("y")) + 20);
-  terminal1.setAttribute("r", 10);
+  terminal1.setAttribute("cy", Number(rect.getAttribute("y")) + 28);
+  terminal1.setAttribute("r", 14);
   terminal1.setAttribute("fill", "#fff");
   terminal1.setAttribute("stroke", "#000");
   this.element.appendChild(terminal1);
@@ -65,8 +83,8 @@ SvgView.prototype.addBlock = function (block) {
   );
   terminal2.setAttribute("x", Number(rect.getAttribute("x")) + -10);
   terminal2.setAttribute("y", Number(rect.getAttribute("y")) + 70);
-  terminal2.setAttribute("width", 20);
-  terminal2.setAttribute("height", 20);
+  terminal2.setAttribute("width", 28);
+  terminal2.setAttribute("height", 28);
   terminal2.setAttribute("fill", "#fff");
   terminal2.setAttribute("stroke", "#000");
   this.element.appendChild(terminal2);
@@ -77,8 +95,8 @@ SvgView.prototype.addBlock = function (block) {
   );
   terminal3.setAttribute("x", Number(rect.getAttribute("x")) + 50);
   terminal3.setAttribute("y", Number(rect.getAttribute("y")) + 40);
-  terminal3.setAttribute("width", 20);
-  terminal3.setAttribute("height", 20);
+  terminal3.setAttribute("width", 28);
+  terminal3.setAttribute("height", 28);
   terminal3.setAttribute("fill", "#fff");
   terminal3.setAttribute("stroke", "#000");
   this.element.appendChild(terminal3);
@@ -104,8 +122,8 @@ function drawGrid(svg) {
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.setAttribute("x1", 0);
     line.setAttribute("x2", size);
-    line.setAttribute("y1", 10 * i);
-    line.setAttribute("y2", 10 * i);
+    line.setAttribute("y1", 14 * i);
+    line.setAttribute("y2", 14 * i);
     line.setAttribute("stroke", "black");
     line.setAttribute("stroke-opacity", "0.1");
     line.setAttribute("stroke-width", "1");
@@ -115,8 +133,8 @@ function drawGrid(svg) {
 
   for (let i = 0; i * 10 < size; i++) {
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", 10 * i);
-    line.setAttribute("x2", 10 * i);
+    line.setAttribute("x1", 14 * i);
+    line.setAttribute("x2", 14 * i);
     line.setAttribute("y1", 0);
     line.setAttribute("y2", size);
     line.setAttribute("stroke", "black");
