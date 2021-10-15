@@ -8,10 +8,6 @@ const WorkSheet = function (view) {
 
 WorkSheet.prototype.initialize = function () {
   this.view.initialize();
-
-  window.addEventListener("resize", () => {
-    console.log("resized");
-  });
 };
 
 WorkSheet.prototype.addBlock = function (block) {

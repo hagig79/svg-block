@@ -5,9 +5,6 @@ Block.prototype.hello = function () {
 };
 
 Block.prototype = {
-  set x(x) {
-    console.log("set x");
-  },
   hello: function () {
     console.log("hello2");
   },
