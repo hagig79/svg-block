@@ -49,8 +49,8 @@ SvgView.prototype.addBlock = function (block) {
   rect.addEventListener("touchstart", (event) => {
     event.preventDefault();
     drag = true;
-    offsetX = event.touches[0].clientX - Number(rect.getAttribute("x"));
-    offsetY = event.touches[0].clientY - Number(rect.getAttribute("y"));
+    offsetX = event.touches[0].clientX - block.x;
+    offsetY = event.touches[0].clientY - block.y;
   });
   rect.addEventListener("mousemove", (event) => {
     if (!drag) {
@@ -60,22 +60,16 @@ SvgView.prototype.addBlock = function (block) {
     // rect.setAttribute("y", event.clientY - offsetY);
     block.x = event.offsetX - offsetX;
     block.y = event.offsetY - offsetY;
-    g.setAttribute(
-      "transform",
-      "translate(" +
-        (event.offsetX - offsetX) +
-        ", " +
-        (event.offsetY - offsetY) +
-        ")"
-    );
+    g.setAttribute("transform", "translate(" + block.x + ", " + block.y + ")");
   });
   rect.addEventListener("touchmove", (event) => {
     event.preventDefault();
     if (!drag) {
       return;
     }
-    rect.setAttribute("x", event.touches[0].clientX - offsetX);
-    rect.setAttribute("y", event.touches[0].clientY - offsetY);
+    block.x = event.touches[0].clientX - offsetX;
+    block.y = event.touches[0].clientY - offsetY;
+    g.setAttribute("transform", "translate(" + block.x + ", " + block.y + ")");
   });
   rect.addEventListener("mouseup", () => {
     drag = false;
