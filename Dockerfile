@@ -1,2 +1,3 @@
 FROM nginx:latest
-COPY public /usr/share/nginx/html
+COPY js /usr/share/nginx/html/js
+COPY index.html /usr/share/nginx/html/index.html

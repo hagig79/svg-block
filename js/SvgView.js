@@ -10,7 +10,52 @@ const SvgView = function (svg) {
 
 SvgView.prototype.initialize = function () {
   setCanvasSize(this.element);
-  drawGrid(this.element);
+  const gridLayer = drawGrid(this.element);
+  this.element.appendChild(gridLayer);
+
+  this.blockLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  this.element.appendChild(this.blockLayer);
+
+  this.actionLayer = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "g"
+  );
+  this.element.appendChild(this.actionLayer);
+
+  this.linkLine = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "line"
+  );
+  this.linkLine.setAttribute("stroke", "#d9370f");
+  this.linkLine.setAttribute("stroke-width", "5");
+  this.actionLayer.appendChild(this.linkLine);
+
+  this.element.addEventListener("mousemove", (event) => {
+    this.linkLine.setAttribute("x2", event.offsetX);
+    this.linkLine.setAttribute("y2", event.offsetY);
+  });
+  this.linkLine.setAttribute("pointer-events", "none");
+
+  this.linkTerminal1 = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle"
+  );
+  this.linkTerminal1.setAttribute("r", GRID_SIZE);
+  this.linkTerminal1.setAttribute("fill", "#f0bfb4");
+  this.linkTerminal1.setAttribute("stroke", "#d9370f");
+  this.actionLayer.appendChild(this.linkTerminal1);
+
+  this.actionLayer.setAttribute("visibility", "hidden");
+};
+
+SvgView.prototype.selectTerminal = function (x, y) {
+  console.log(`${x} ${y}`);
+  this.linkTerminal1.setAttribute("cx", x);
+  this.linkTerminal1.setAttribute("cy", y);
+
+  this.linkLine.setAttribute("x1", x);
+  this.linkLine.setAttribute("y1", y);
+  this.actionLayer.setAttribute("visibility", "visible");
 };
 
 const GRID_SIZE = 14;
@@ -81,7 +126,7 @@ SvgView.prototype.addBlock = function (block) {
   // rect.addEventListener("mouseout", () => {
   //   drag = false;
   // });
-  this.element.appendChild(g);
+  this.blockLayer.appendChild(g);
   g.appendChild(rect);
 
   const terminal1 = document.createElementNS(
@@ -90,7 +135,13 @@ SvgView.prototype.addBlock = function (block) {
   );
   terminal1.setAttribute("cx", Number(rect.getAttribute("x")));
   terminal1.setAttribute("cy", Number(rect.getAttribute("y")) + 28);
-  terminal1.setAttribute("r", 14);
+  terminal1.setAttribute("r", GRID_SIZE);
+  terminal1.addEventListener("click", () => {
+    this.selectTerminal(
+      block.x + Number(terminal1.getAttribute("cx")),
+      block.y + Number(terminal1.getAttribute("cy"))
+    );
+  });
   g.appendChild(terminal1);
 
   const terminal2 = document.createElementNS(
@@ -125,6 +176,7 @@ function setCanvasSize(svg) {
 }
 
 function drawGrid(svg) {
+  const gridLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
   const size = Math.max(
     Math.min(window.outerWidth, window.innerWidth),
     Math.min(window.outerHeight, window.innerHeight)
@@ -140,7 +192,7 @@ function drawGrid(svg) {
     line.setAttribute("stroke-opacity", "0.1");
     line.setAttribute("stroke-width", "1");
     line.setAttribute("shape-rendering", "crispEdges");
-    svg.appendChild(line);
+    gridLayer.appendChild(line);
   }
 
   for (let i = 0; i * 10 < size; i++) {
@@ -153,8 +205,10 @@ function drawGrid(svg) {
     line.setAttribute("stroke-opacity", "0.1");
     line.setAttribute("stroke-width", "1");
     line.setAttribute("shape-rendering", "crispEdges");
-    svg.appendChild(line);
+    gridLayer.appendChild(line);
   }
+
+  return gridLayer;
 }
 
 SvgView.prototype.addEventListener = function (type, listener) {
