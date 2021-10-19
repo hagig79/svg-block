@@ -1,11 +1,10 @@
-const Block = function () {};
+const Block = function (factory) {
+  this.view = factory.createBlockView();
+  this.terminals = [];
 
-Block.prototype.hello = function () {
-  console.log("hello");
-};
+  const terminal1 = new Terminal(factory);
+  terminal1.view.setParent(this.view);
+  this.terminals.push(terminal1);
 
-Block.prototype = {
-  hello: function () {
-    console.log("hello2");
-  },
+  this.view.setModel(this);
 };

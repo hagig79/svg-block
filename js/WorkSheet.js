@@ -1,9 +1,9 @@
-const WorkSheet = function (view) {
-  this.view = view;
+const WorkSheet = function (factory) {
+  this.view = factory.createWorkSheetView();
   this.blocks = [];
-  this.view.addEventListener("block-select", (e) => {
-    console.log(e.detail.block);
-  });
+  // this.view.addEventListener("block-select", (e) => {
+  //   console.log(e.detail.block);
+  // });
 };
 
 WorkSheet.prototype.initialize = function () {
