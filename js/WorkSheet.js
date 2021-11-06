@@ -1,16 +1,24 @@
-const WorkSheet = function (factory) {
-  this.view = factory.createWorkSheetView();
-  this.blocks = [];
-  // this.view.addEventListener("block-select", (e) => {
-  //   console.log(e.detail.block);
-  // });
-};
+import { Connection } from "./Connection.js";
 
-WorkSheet.prototype.initialize = function () {
-  this.view.initialize();
-};
+class WorkSheet {
+  pubsub = null;
+  blocks = [];
+  connections = [];
 
-WorkSheet.prototype.addBlock = function (block) {
-  this.blocks.push(block);
-  this.view.addBlock(block);
-};
+  setPubSub(pubsub) {
+    this.pubsub = pubsub;
+  }
+
+  addBlock(block) {
+    this.blocks.push(block);
+    this.pubsub.publish("blockAdded", [block]);
+  }
+
+  connect(terminal1, terminal2) {
+    const connection = new Connection(terminal1, terminal2);
+    this.connections.push(connection);
+    this.pubsub.publish("terminalConnected", [connection]);
+  }
+}
+
+export { WorkSheet };

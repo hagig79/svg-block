@@ -1,48 +1,58 @@
-const TerminalView = function () {};
+class TerminalView {
+  constructor(terminal, parent) {
+    this.terminal = terminal;
+    this.parent = parent;
+    this.connectionViews = [];
+    this.listeners = {};
 
-TerminalView.prototype.setModel = function (model) {
-  this.model = model;
-};
+    this.svg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    // terminalSvg.setAttribute("cx", 0);
+    // terminalSvg.setAttribute("cy", 28 + (28 + 14) * index);
+    this.svg.setAttribute("r", 14);
+    // group.appendChild(terminalSvg);
+    this.svg.addEventListener("click", () => {
+      this.dispatchEvent("click", this);
+    });
+  }
 
-TerminalView.prototype.setParent = function (parent) {
-  this.parent = parent;
-};
+  setX(x) {
+    this.svg.setAttribute("cx", x);
+  }
 
-TerminalView.prototype.setWorkSheet = function (worksheet) {
-  this.worksheet = worksheet;
-};
+  setY(y) {
+    this.svg.setAttribute("cy", y);
+  }
 
-TerminalView.prototype.getSvg = function () {
-  const terminal = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "circle"
-  );
-  this.x = 0;
-  this.y = 28;
-  terminal.setAttribute("cx", this.x);
-  terminal.setAttribute("cy", this.y);
-  terminal.setAttribute("r", 14);
+  getAbsoluteX() {
+    return Number(this.svg.getAttribute("cx")) + this.parent.getX();
+  }
 
-  terminal.addEventListener("click", () => {
-    this.worksheet.selectTerminal(this);
-  });
+  getAbsoluteY() {
+    return Number(this.svg.getAttribute("cy")) + this.parent.getY();
+  }
 
-  this.svg = terminal;
+  addConnectionView(connectionView) {
+    this.connectionViews.push(connectionView);
+  }
 
-  return this.svg;
-};
+  addEventListener(type, listener) {
+    if (!this.listeners[type]) {
+      this.listeners[type] = [];
+    }
+    this.listeners[type].push(listener);
+  }
 
-TerminalView.prototype.selected = function () {};
+  dispatchEvent(type, args) {
+    if (this.listeners[type]) {
+      this.listeners[type].forEach((listener) => {
+        listener(args);
+      });
+    }
+  }
 
-TerminalView.prototype.getAbsoluteX = function () {
-  return this.parent.x + this.x;
-};
+  mount(parent) {
+    parent.appendChild(this.svg);
+  }
+}
 
-TerminalView.prototype.getAbsoluteY = function () {
-  return this.parent.y + this.y;
-};
-
-TerminalView.prototype.connect = function (terminalView) {
-  console.log("connect Terminal");
-  this.model.connect(terminalView.model);
-};
+export { TerminalView };

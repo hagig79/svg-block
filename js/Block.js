@@ -1,10 +1,11 @@
-const Block = function (factory) {
-  this.view = factory.createBlockView();
-  this.terminals = [];
+class Block {
+  inputTerminals = [];
+  outputTerminals = [];
 
-  const terminal1 = new Terminal(factory);
-  terminal1.view.setParent(this.view);
-  this.terminals.push(terminal1);
+  constructor() {}
 
-  this.view.setModel(this);
-};
+  evalute() {
+  }
+}
+
+export { Block };
